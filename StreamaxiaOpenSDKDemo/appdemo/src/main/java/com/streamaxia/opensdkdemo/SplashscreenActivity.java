@@ -40,7 +40,7 @@ public class SplashscreenActivity extends AppCompatActivity {
             @Override
             public void onPermissionsChecked(MultiplePermissionsReport report) {
                 if (report.areAllPermissionsGranted()) {
-                    Intent intent = new Intent(SplashscreenActivity.this, StreamActivity.class);
+                    Intent intent = new Intent(SplashscreenActivity.this, MainActivity.class);
                     startActivity(intent);
                     SplashscreenActivity.this.finish();
                 }

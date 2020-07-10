@@ -36,11 +36,12 @@ public class StreamActivity extends AppCompatActivity implements RtmpHandler.Rtm
         EncoderHandler.EncodeListener {
 
     private final String TAG = StreamActivity.class.getSimpleName();
+    public static final String RTMP_URL = "Rtmp url";
 
     // Set default values for the streamer
-    public final static String streamaxiaStreamName = "demo";
-    public final static int bitrate = 500;
+    public final static String streamaxiaStreamName = "Ek";
     public final static int width = 720;
+    public final static int bitrate = 500;
     public final static int height = 1280;
 
     // The view that displays the camera feed
@@ -54,12 +55,16 @@ public class StreamActivity extends AppCompatActivity implements RtmpHandler.Rtm
     TextView stateTextView;
 
     private StreamaxiaPublisher mPublisher;
+    private String url;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         setContentView(R.layout.activity_stream);
+        url = getIntent().getStringExtra(RTMP_URL);
+
         ButterKnife.bind(this);
 
         hideStatusBar();
@@ -116,12 +121,14 @@ public class StreamActivity extends AppCompatActivity implements RtmpHandler.Rtm
             startStopTextView.setText("STOP");
             mChronometer.setBase(SystemClock.elapsedRealtime());
             mChronometer.start();
-            mPublisher.startPublish("rtmp://rtmp.streamaxia.com/streamaxia/" + streamaxiaStreamName);
+            mPublisher.startPublish(url);
             takeSnapshot();
         } else {
             startStopTextView.setText("START");
             stopChronometer();
             mPublisher.stopPublish();
+            this.finish();
+            startActivity(new Intent(this, MainActivity.class));
         }
 
     }
@@ -149,6 +156,7 @@ public class StreamActivity extends AppCompatActivity implements RtmpHandler.Rtm
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         mPublisher.setScreenOrientation(newConfig.orientation);
+        mPublisher.setCameraFacing(1);
     }
 
     private void hideStatusBar() {
